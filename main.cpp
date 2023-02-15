@@ -14,7 +14,7 @@ int main()
 	struct sockaddr_in server_address;
 	server_address.sin_family = AF_INET;
 	server_address.sin_addr.s_addr = INADDR_ANY;
-	server_address.sin_port = htons(8080);
+	server_address.sin_port = htons(3131);
 
 	if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) == -1)
 	{
@@ -37,6 +37,7 @@ int main()
 		std::cout << "client error" << std::endl;
 		return 1;
 	}
+	std::cout << client_socket << std::endl;
 	while(1){
 		char buffer[1024];
 		bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
@@ -46,6 +47,8 @@ int main()
 		}
 
 		buffer[bytes_received] = '\0'; // make sure the buffer is null-terminated
+		std::string sendd = ":localhost 001 asd :Welcome to Internet Relay Chat \r\n"; // num erik lere bak 
+		send(client_socket, sendd.c_str(), sizeof(sendd), 0);
 		printf("Received %ld bytes: %s\n", bytes_received, buffer);
 	}
 	// rest of your code
