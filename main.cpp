@@ -4,7 +4,7 @@
 
 int parseBuffer(std::string buffer)
 {
-
+	return (12312321);
 }
 
 int main(int argc, char *argv[])
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 		std::cout << "client error" << std::endl;
 		return 1;
 	}
-	std::cout << client_socket << std::endl;
+	std::cout << client_socket << " => client_socket" << std::endl;
 	while(1){
 		char buffer[1024];
 		bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
