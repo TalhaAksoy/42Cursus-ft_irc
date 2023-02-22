@@ -1,11 +1,4 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <iostream>
-
-int parseBuffer(std::string buffer)
-{
-	return (12312321);
-}
+#include "irc.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -54,10 +47,14 @@ int main(int argc, char *argv[])
 		}
 
 		buffer[bytes_received] = '\0'; // make sure the buffer is null-terminated
-		//std::string sendd = ":localhost 001 asd :Welcome to Internet Relay Chat \r\n"; // num erik lere bak
-		//send(client_socket, sendd.c_str(), sizeof(sendd), 0);
+		std::string sendd = ":127.0.0.1 001 saksoy :Welcome to Internet Relay Chat \r\n"; // num erik lere bak
+		send(client_socket, sendd.c_str(), sizeof(sendd), 0);
 		printf("Received %ld bytes: %s\n", bytes_received, buffer);
+		std::vector<std::string> splittedString =  splitString(buffer, ' ');
+		for (int i = 0 ; i < splittedString.size(); i++)
+			std::cout << splittedString[i] << std::endl;
+		//send(client_socket, "5", 3, 0);
 	}
-	// rest of your code
+	// rest of your code                 v                                    
 	return 0;
 }
