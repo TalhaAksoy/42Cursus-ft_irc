@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
             buffer[bytes_received] = '\0'; // Make sure the buffer is null-terminated
 			std::getline(std::cin, message);
 			std::cout << "Received " << message.size() << " bytes from client: " << message << std::endl;
-			send(client_socket, message.c_str(), sizeof(message), 0);PONG 
+			send(client_socket, message.c_str(), sizeof(message), 0);
 			std::cout << "Received " << bytes_received << " bytes from client: " << buffer << std::endl;
         }
 
