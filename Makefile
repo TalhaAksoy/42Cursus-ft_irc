@@ -1,4 +1,4 @@
-NAME = irc
+NAME = ircserv
 
 SRC_FILES = main.cpp users.cpp utils.cpp
 

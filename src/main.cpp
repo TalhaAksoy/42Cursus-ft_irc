@@ -6,67 +6,95 @@ void print_err(std::string message)
 	exit(1);
 }
 
-int main(int ac, char *av[])
-{
-	if (ac != 3){
-		std::cout << "Usage : ./irc <port> <password>" << std::endl;
-		return (0);
-	}
-	int port = std::atoi(av[1]);
-	const std::string password = (const std::string)av[2];
-	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+#define MAX_CLIENTS 10
+#define BUFFER_SIZE 1024
 
-	if (server_socket == -1)
-		print_err("Error: Failed Create Server Socket");
+int main(int ac, char *av[]) {
+    if (ac != 3)
+        print_err("Usage Error: ./irc <port> password");
+
+    int port = std::atoi(av[1]);
+    std::string password = av[2];
+    struct sockaddr_in server_address, client_address;
+    socklen_t client_len = sizeof(client_address);
+    int server_socket, client_socket[MAX_CLIENTS], active_clients = 0;
+    char buffer[BUFFER_SIZE];
+
+    // Create server socket
+    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set server address
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = INADDR_ANY;
+    server_address.sin_port = htons(port);
+
+    // Bind server socket
+    if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) < 0) {
+        perror("Bind failed");
+        exit(EXIT_FAILURE);
+    }
 	
-	struct sockaddr_in server_address;
-	server_address.sin_family = AF_INET;
-	server_address.sin_addr.s_addr = INADDR_ANY;
-	server_address.sin_port = htons(port);
-	/*Create connection with internet*/
+	std::cout << "Listenin Port on [" << port << "]" << std::endl;
 
-	if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) == -1)
-		print_err("Error: Failed to Bind Socket");
-	/*Bind fonksiyonu ile sockete address atamasi yapilir*/
+    // Listen for incoming connections
+    if (listen(server_socket, MAX_CLIENTS) < 0) {
+        perror("Listen failed");
+        exit(EXIT_FAILURE);
+    }
 
-	if (listen(server_socket, 5) == -1)
-		print_err("Error: Failed to Listen on Socket");
-	/*listen ile socketin maks kac baglanti alabilecegi belirlenir ve veri almaya hazir oldugunu belirtiriz.*/
+    // Add server socket to polling structure
+    struct pollfd poll_fds[MAX_CLIENTS + 1];
+    poll_fds[0].fd = server_socket;
+    poll_fds[0].events = POLLIN;
 
-	std::cout << "Listenin port on => [" << port << "]" << std::endl;
-	
-	while (true)
-	{
-		struct sockaddr_in client_address;
-		socklen_t client_addrlen = sizeof(client_address);
-		int client_socket = accept(server_socket, (struct sockaddr*)&client_address, &client_addrlen);
-		if (client_socket == -1)
-			print_err("Error: Failed to accept incoming connection");
-		
-		char client_address_str[INET_ADDRSTRLEN];
-		inet_ntop(AF_INET, &(client_address.sin_addr), client_address_str, INET6_ADDRSTRLEN);
-		std::cout << "Connection From " << client_address_str << std::endl;
+    // Main loop
+    while (1) {
+        // Poll for events
+        int num_ready = poll(poll_fds, active_clients + 1, -1);
 
-		while (true)
-		{
-			char buffer[1024];
-			ssize_t bytes_recived = recv(client_socket, buffer, sizeof(buffer), 0);
-			if (bytes_recived == -1)
-			{
-				std::cerr << "Error: Failed To Recive Data" << std::endl;
-				break;
-			}
-			if (bytes_recived == 0)
-			{
-				std::cout << "Connection Closed By Client" << std::endl;
-				break;
-			}
-			buffer[bytes_recived] = '\0';
-			std::cout << buffer << std::endl;
-		}
-		close(client_socket);
-	}
-	close(server_socket);
+        // Check for errors
+        if (num_ready < 0) {
+            perror("Poll failed");
+            exit(EXIT_FAILURE);
+        }
+
+        // Check for server socket events
+        if (poll_fds[0].revents & POLLIN) {
+            // Accept incoming connection
+            if ((client_socket[active_clients] = accept(server_socket, (struct sockaddr *)&client_address, &client_len)) < 0) {
+                perror("Accept failed");
+                exit(EXIT_FAILURE);
+            }
+
+            // Add new client to polling structure
+            poll_fds[active_clients + 1].fd = client_socket[active_clients];
+            poll_fds[active_clients + 1].events = POLLIN;
+            active_clients++;
+        }
+
+        // Check for client socket events
+        for (int i = 0; i < active_clients; i++) {
+            if (poll_fds[i + 1].revents & POLLIN) {
+                // Read incoming data
+                ssize_t bytes_recived = recv(client_socket[i], buffer, sizeof(buffer), 0);
+				if (bytes_recived == -1)
+					print_err("Error: Failed To Recive Data");
+				if (bytes_recived == 0)
+					print_err("Connection Closed By Client");
+				buffer[bytes_recived] = '\0';
+
+                // Echo incoming data back to client
+                //write(client_socket[i], buffer, sizeof(buffer));
+				// std::string message = "PING";
+				// send(client_socket[i], message.c_str(), sizeof(message), 0);
+				std::cout << "[" << buffer << "]" << std::endl;
+            }
+        }
+    }
+    return 0;
 }
 
 // //https://irc.dalexhd.dev/
