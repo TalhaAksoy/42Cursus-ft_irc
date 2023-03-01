@@ -1,5 +1,14 @@
 #include "users.hpp"
 
+User::User()
+{
+	this->name = "Default";
+	this->fullName = "Default2";
+	this->getCap = false;
+	this->nick = "Default Nick";
+	this->iw = "Default Iw";
+}
+
 void User::setName(std::string name){
 	this->name = name;
 }
@@ -31,4 +40,14 @@ std::string User::getIw(){
 
 std::string User::getNick(){
 	return (this->nick);
+}
+
+bool User::getGetCap()
+{
+	return(this->getCap);
+}
+
+void User::setGetCap(bool var)
+{
+	this->getCap = var;
 }

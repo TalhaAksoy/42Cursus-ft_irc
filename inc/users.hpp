@@ -9,6 +9,7 @@ private:
 	std::string iw;
 	std::string fullName;
 	std::string nick;
+	bool getCap;
 public:
 	void setName(std::string);
 	void setIw(std::string);
@@ -18,4 +19,7 @@ public:
 	std::string getIw();
 	std::string getFullName();
 	std::string getNick();
+	bool getGetCap();
+	void setGetCap(bool);
+	User();
 };

@@ -15,6 +15,8 @@ int main(int ac, char *av[]) {
 
     int port = std::atoi(av[1]);
     std::string password = av[2];
+    User defaultUser;
+
     struct sockaddr_in server_address, client_address;
     socklen_t client_len = sizeof(client_address);
     int server_socket, client_socket[MAX_CLIENTS], active_clients = 0;
@@ -36,7 +38,7 @@ int main(int ac, char *av[]) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
     }
-	
+
 	std::cout << "Listenin Port on [" << port << "]" << std::endl;
 
     // Listen for incoming connections
@@ -75,11 +77,26 @@ int main(int ac, char *av[]) {
             active_clients++;
         }
 
+
         // Check for client socket events
         for (int i = 0; i < active_clients; i++) {
             if (poll_fds[i + 1].revents & POLLIN) {
                 // Read incoming data
                 ssize_t bytes_recived = recv(client_socket[i], buffer, sizeof(buffer), 0);
+                if (defaultUser.getGetCap() == false)
+                {
+                    std::cout << "{False}" << std::endl;
+                    std::string message = "CAP * LS :multi-prefix sasl\r\n";
+                    send(client_socket[i], message.c_str(), sizeof(message), 0);
+                    defaultUser.setGetCap(true);
+                }
+                else
+                {
+                    std::cout << "{True}" << std::endl;
+                    std::string message = "CAP * ACK multi-prefix\r\n";
+                    send(client_socket[i], message.c_str(), sizeof(message), 0);
+                    defaultUser.setGetCap(false);
+                }
 				if (bytes_recived == -1)
 					print_err("Error: Failed To Recive Data");
 				if (bytes_recived == 0)
