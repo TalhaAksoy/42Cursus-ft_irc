@@ -6,3 +6,11 @@ ilk girdileri aldik cap ls den ende kadar olan kisim donuyor
 cap end dondukten sonra mesaj atilmiycak 
 kullanicidan nick alinicak alinan nick num erikle kaydedilcek
 sonrasinda devam edilicek
+
+
+kullanici kayiti olusturulcak
+passwordu nerde kullanicaz bilmiyoz
+server classlastirildi (yapilicak seyler var hala)
+execute classi olusturuldu komutlar eklenicek
+cap fonksiyonu yapildi
+class duzenlemeleri yapildi

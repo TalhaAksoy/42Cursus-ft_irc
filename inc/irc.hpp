@@ -8,7 +8,5 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Users.hpp"
-#include "Server.hpp"
 
 std::vector<std::string> splitString(std::string str, char delimiter);

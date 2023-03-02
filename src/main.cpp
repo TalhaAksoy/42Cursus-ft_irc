@@ -1,4 +1,7 @@
 #include "irc.hpp"
+#include "User.hpp"
+#include "Server.hpp"
+#include "Execute.hpp"
 
 void print_err(std::string message)
 {
@@ -13,6 +16,8 @@ int main(int ac, char *av[]) {
 	if (ac != 3)
 		print_err("Usage Error: ./irc <port> password");
 
+	Server server;
+	Execute exec;
 	int port = std::atoi(av[1]);
 	const std::string password = av[2];
 	User defaultUser;
@@ -27,6 +32,8 @@ int main(int ac, char *av[]) {
 		perror("Socket creation failed");
 		exit(EXIT_FAILURE);
 	}
+
+	server.setServerFD(server_socket);
 
 	// Set server address
 	server_address.sin_family = AF_INET;
@@ -90,20 +97,7 @@ int main(int ac, char *av[]) {
 					asd = "001 CheaterAK :Welcome to Internet Relay Chat \r\n";
 					send(client_socket[i], asd.c_str(), sizeof(asd), 0);
 				}
-				if (defaultUser.getGetCap() == false)
-				{
-					std::cout << "{False}" << std::endl;
-					std::string message = "CAP * LS :multi-prefix sasl\r\n";
-					send(client_socket[i], message.c_str(), sizeof(message), 0);
-					defaultUser.setGetCap(true);
-				}
-				else
-				{
-					std::cout << "{True}" << std::endl;
-					std::string message = "CAP * ACK multi-prefix\r\n";
-					send(client_socket[i], message.c_str(), sizeof(message), 0);
-					defaultUser.setGetCap(false);
-				}
+				exec.cap(defaultUser, client_socket[i]);
 				if (bytes_recived == -1)
 					print_err("Error: Failed To Recive Data");
 				if (bytes_recived == 0)
@@ -115,6 +109,15 @@ int main(int ac, char *av[]) {
 				// std::string message = "PING";
 				// send(client_socket[i], message.c_str(), sizeof(message), 0);
 				std::cout << "[" << buffer << "]" << std::endl;
+				std::vector<std::string> str = splitString(buffer, ' ');
+				for (size_t i = 0; i < str.size() ; i++)
+				{
+					std::cout << "{" + str[i] + "}" << std::endl;
+					if (!str[i].compare(0,3, "END"))
+					{
+						exec.setLuckyNumber();;
+					}
+				}
 			}
 		}
 	}

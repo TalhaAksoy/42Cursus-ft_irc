@@ -1,7 +1,7 @@
 NAME = ircserv
 
-SRC_FILES = main.cpp users.cpp utils.cpp
-
+SRC_FILES = main.cpp User.cpp utils.cpp Server.cpp Execute.cpp
+DESKTOP = ~/Desktop/
 SRC_DIR = ./src/
 OBJ_DIR = ./obj/
 INC_DIR = ./inc/
@@ -23,7 +23,8 @@ test :
 $(NAME):$(OBJS)
 	mkdir -p $(BIN_DIR)
 	@$(CC) $(OBJS) -o $(BIN_DIR)$(NAME)
-	@echo "irc compiled. It is in $(BIN_DIR) directory."
+	@cp $(BIN_DIR)$(NAME) $(DESKTOP) 
+	@echo "irc compiled. It is in $(BIN_DIR) directory and Desktop."
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(OBJ_DIR)
@@ -37,6 +38,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(BIN_DIR)
+	@rm -rf $(DESKTOP)$(NAME)
 	@echo Program deleted.
 
 re: fclean $(NAME) clean
