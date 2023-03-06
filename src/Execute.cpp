@@ -2,6 +2,11 @@
 
 Execute::Execute()
 {
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		this->fd_array[i][0] = -1;
+		this->fd_array[i][1] = CAP;
+	}
 	return ;
 }
 
@@ -12,23 +17,36 @@ Execute::~Execute()
 
 void Execute::cap(User &user, int fd)
 {
-	if (luckyNumber == 31)
+	static int32_t fd_counter = 0;
+	int32_t i;
+	for (i = 0; i < MAX_CLIENTS; i++)
 	{
-		if (user.getGetCap() == false)
-		{
-			std::cout << "{False}" << std::endl;
-			std::string message = "CAP * LS :multi-prefix sasl\r\n";
-			send(fd, message.c_str(), sizeof(message), 0);
-			user.setGetCap(true);
-		}
-		else
-		{
-			std::cout << "{True}" << std::endl;
-			std::string message = "CAP * ACK multi-prefix\r\n";
-			send(fd, message.c_str(), sizeof(message), 0);
-			user.setGetCap(false);
-		}
+		if (this->fd_array[i][0] == fd && this->fd_array[i][1] == DONE)
+			return ;
+		if (this->fd_array[i][0] == fd)
+			break ;
 	}
+	this->fd_array[fd_counter][0] = fd;
+	if (user.getGetCap() == false && this->fd_array[fd_counter][1] == CAP)
+	{
+		std::cout << "{False}" << std::endl;
+		std::string message = "CAP * LS :multi-prefix sasl\r\n";
+		send(fd, message.c_str(), sizeof(message), 0);
+		user.setGetCap(true);
+		this->fd_array[fd_counter][1] = REQ;
+	}
+	else if (this->fd_array[i][1] == REQ)
+	{
+		std::cout << "{True}" << std::endl;
+		std::string message = "CAP * ACK multi-prefix\r\n";
+		send(fd, message.c_str(), sizeof(message), 0);
+		user.setGetCap(false);
+		this->fd_array[fd_counter][1] = DONE;
+		fd_counter++;
+	}
+	// std::cout << "fd_array 0 0 => " << this->fd_array[0][0] << std::endl << "fd_array 0 1 => " << this->fd_array[0][1] << std::endl;
+	// std::cout << "-----------------------" << std::endl;
+	// std::cout << "fd_array 1 0 => " << this->fd_array[1][0] << std::endl << "fd_array 1 1 => " << this->fd_array[1][1] << std::endl;
 }
 
 void	Execute::setLuckyNumber()
@@ -47,19 +65,20 @@ void		Execute::findCommad()
 
 }
 
-void		Execute::executeCommand()
+User Execute::addUser(std::string name, int userFd)
 {
-	switch (commandType)
-	{
-	case NICK:
-		break;
-	case JOIN:
-		break;
-	case PRIVMSG:
-		break;
-	case KICK:
-		break;
-	default:
-		break;
-	}
+	User user;
+	user.setName(name);
+	user.setFd(userFd);
+	return (user);
+}
+
+Channel Execute::createChannel(std::string channelName, int userFd, std::string password, std::string topic)
+{
+	Channel channel;
+	channel.setName(channelName);
+	channel.setPassword(password);
+	channel.addUser(userFd);
+	channel.setTopic(topic);
+	return (channel);
 }

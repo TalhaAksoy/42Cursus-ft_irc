@@ -1,3 +1,5 @@
+!!!!!!Makefile Relink Cozulmedi!!!!!!!! X
+
 execute classi olusturulcak "serverdan gelen komutlar ve cap ls sendleri icin"
 cap ls send fonksiyonu dogru zamanda calistirilcak
 ve komutlar eklenicek
@@ -14,3 +16,9 @@ server classlastirildi (yapilicak seyler var hala)
 execute classi olusturuldu komutlar eklenicek
 cap fonksiyonu yapildi
 class duzenlemeleri yapildi
+
+
+!!!!Multi Connect Durumunu Melihe Sor !!!! X
+!!!! Kanallari Nasi Tutucaz Melihe Sor !!!! X
+
+hata mesajlarini fonksiyona cevir

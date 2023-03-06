@@ -1,6 +1,6 @@
 NAME = ircserv
 
-SRC_FILES = main.cpp User.cpp utils.cpp Server.cpp Execute.cpp
+SRC_FILES = main.cpp User.cpp utils.cpp Server.cpp Execute.cpp Channel.cpp
 DESKTOP = ~/Desktop/
 SRC_DIR = ./src/
 OBJ_DIR = ./obj/

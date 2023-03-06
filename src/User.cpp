@@ -51,3 +51,13 @@ void User::setGetCap(bool var)
 {
 	this->getCap = var;
 }
+
+void User::setFd(int32_t fd)
+{
+	this->fd = fd;
+}
+
+int32_t User::getFd()
+{
+	return(this->fd);
+}

@@ -2,6 +2,7 @@
 #include "User.hpp"
 #include "Server.hpp"
 #include "Execute.hpp"
+#include "Channel.hpp"
 
 void print_err(std::string message)
 {
@@ -9,18 +10,15 @@ void print_err(std::string message)
 	exit(1);
 }
 
-#define MAX_CLIENTS 10
-#define BUFFER_SIZE 1024
-
 int main(int ac, char *av[]) {
 	if (ac != 3)
 		print_err("Usage Error: ./irc <port> password");
 
 	Server server;
-	Execute exec;
+	User defaultUser;
+	
 	int port = std::atoi(av[1]);
 	const std::string password = av[2];
-	User defaultUser;
 
 	struct sockaddr_in server_address, client_address;
 	socklen_t client_len = sizeof(client_address);
@@ -85,41 +83,50 @@ int main(int ac, char *av[]) {
 			active_clients++;
 		}
 
-
 		// Check for client socket events
 		for (int i = 0; i < active_clients; i++) {
 			if (poll_fds[i + 1].revents & POLLIN) {
 				// Read incoming data
 				ssize_t bytes_recived = recv(client_socket[i], buffer, sizeof(buffer), 0);
-				if (i == 1)	
-				{
-					std::string asd;
-					asd = "001 CheaterAK :Welcome to Internet Relay Chat \r\n";
-					send(client_socket[i], asd.c_str(), sizeof(asd), 0);
-				}
-				exec.cap(defaultUser, client_socket[i]);
+				std::cout << "Client Number => " << client_socket[i] << std::endl;
+				// if (i == 1)	
+				// {
+				// 	std::string asd;
+				// 	asd = "001 CheaterAK :Welcome to Internet Relay Chat \r\n";
+				// 	send(client_socket[i], asd.c_str(), sizeof(asd), 0);
+				// }
+				server.serverExec.cap(defaultUser, client_socket[i]);
 				if (bytes_recived == -1)
 					print_err("Error: Failed To Recive Data");
 				if (bytes_recived == 0)
 					print_err("Connection Closed By Client");
 				buffer[bytes_recived] = '\0';
 
-				// Echo incoming data back to client
-				//write(client_socket[i], buffer, sizeof(buffer));
-				// std::string message = "PING";
-				// send(client_socket[i], message.c_str(), sizeof(message), 0);
-				std::cout << "[" << buffer << "]" << std::endl;
+				//std::cout << "[" << buffer << "]" << std::endl;
 				std::vector<std::string> str = splitString(buffer, ' ');
-				for (size_t i = 0; i < str.size() ; i++)
+				for (size_t j = 0; j < str.size() ; j++)
 				{
-					std::cout << "{" + str[i] + "}" << std::endl;
-					if (!str[i].compare(0,3, "END"))
+					std::cout << "{" + str[j] + "}" << std::endl;
+					if (!str[j].compare(0,5,"NICK"))
 					{
-						exec.setLuckyNumber();;
+						std::cout << "NICK GELDI" << std::endl;
+						server.addUser(str[j + 1], client_socket[i]);
+						server.writeUserList();
+					}
+					if (!str[j].compare(0, 5, "JOIN"))
+					{
+						std::cout << "JOIN GELDI" << std::endl;
+						server.createChannel(str[j + 1], client_socket[i],password, NULL);
+						
 					}
 				}
 			}
 		}
+	}
+	close(server_socket);
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		close(client_socket[i]);
 	}
 	return 0;
 }
