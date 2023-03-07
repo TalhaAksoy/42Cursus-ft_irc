@@ -1,8 +1,16 @@
-#pragma once
+#ifndef EXECUTE_HPP
+# define EXECUTE_HPP
+# ifndef IRC_HPP
+#  include "irc.hpp"
+# endif
+# ifndef USER_HPP
+#  include "User.hpp"
+# endif
+# ifndef CHANNEL_HPP
+#  include "Channel.hpp"
+# endif
 
-#include "irc.hpp"
-#include "User.hpp"
-#include "Channel.hpp"
+# define MAX_CLIENTS 10
 
 typedef enum
 {
@@ -34,6 +42,8 @@ public:
 	void		setLuckyNumber();
 	void		cap(User&, int);
 	void		findCommad();
-	User		addUser(std::string name, int userFd, std::string, std::string);
+	User		addUser(std::string name, int userFd);
 	Channel		createChannel(std::string channelName, int userFd, std::string password, std::string topic);
 };
+
+#endif

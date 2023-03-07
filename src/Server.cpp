@@ -29,7 +29,7 @@ std::vector<User> Server::getUserList(){
 	return (this->userList);
 }
 
-void Server::addUser(std::string name, int userFd, std::string passInput, std::string password)
+void Server::addUser(std::string name, int userFd)
 {
 	User newUser;
 	for (int i = 0; i < this->userList.size(); i++)
@@ -41,7 +41,7 @@ void Server::addUser(std::string name, int userFd, std::string passInput, std::s
 			return;
 		}
 	}
-	newUser = this->serverExec.addUser(name, userFd, passInput, password);
+	newUser = this->serverExec.addUser(name, userFd);
 	if (newUser.getName() == "Default")
 	{
 		std::string errMessage= "Error : invalid password \r\n";

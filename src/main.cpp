@@ -104,28 +104,7 @@ int main(int ac, char *av[]) {
 
 				//std::cout << "[" << buffer << "]" << std::endl;
 				std::vector<std::string> str = splitString(buffer, ' ');
-				for (size_t j = 0; j < str.size() ; j++)
-				{
-					std::cout << "{" + str[j] + "}" << std::endl;
-					if (!str[j].compare(0,5,"NICK"))
-					{
-						std::cout << "NICK GELDI" << std::endl;
-						if (str.size() != 3)
-						{
-							std::string loginErrorMessage = "Error :Few or More Arguments Error\r\n";
-							send(client_socket[i], loginErrorMessage.c_str(), loginErrorMessage.size(), 0);
-							return (1);
-						}
-						server.addUser(str[j + 1], client_socket[i], str[j + 2], password);
-						server.writeUserList();
-					}
-					if (!str[j].compare(0, 5, "JOIN"))
-					{
-						std::cout << "JOIN GELDI" << std::endl;
-						server.createChannel(str[j + 1], client_socket[i],password, "");
-
-					}
-				}
+				executeCommand(str, password, client_socket[i], server);
 			}
 		}
 	}

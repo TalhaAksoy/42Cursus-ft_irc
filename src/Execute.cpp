@@ -65,16 +65,10 @@ void		Execute::findCommad()
 
 }
 
-User Execute::addUser(std::string name, int userFd, std::string passInput, std::string password)
+User Execute::addUser(std::string name, int userFd)
 {
 	User user;
-	if (user.getPassRequire())
-	{
-		if (passInput == password)
-			user.setPassRequire(false);
-		else
-		return user;
-	}
+	
 	user.setName(name);
 	user.setFd(userFd);
 	return (user);

@@ -1,6 +1,9 @@
-#pragma once
+#ifndef USER_HPP
+# define USER_HPP
 
-#include "irc.hpp"
+# ifndef IRC_HPP
+#  include "irc.hpp"
+# endif
 //#include "Execute.hpp"
 //#include "Server.hpp"
 
@@ -31,3 +34,5 @@ public:
 	void setPassRequire(bool);
 	int32_t getFd();
 };
+
+#endif

@@ -1,6 +1,8 @@
-#pragma once
-#include "irc.hpp"
-
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
+# ifndef IRC_HPP
+#  include "irc.hpp"
+# endif
 class Channel
 {
 private:
@@ -18,3 +20,4 @@ public:
 	void				addUser(int);
 	void				removeUser(int);
 };
+#endif

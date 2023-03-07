@@ -1,8 +1,12 @@
-#pragma once
+#ifndef SERVER_HPP
+# define SERVER_HPP
 
-#include "irc.hpp"
-#include "Execute.hpp"
-
+# ifndef IRC_HPP
+#  include "irc.hpp"
+# endif
+# ifndef EXECUTE_HPP
+#  include "Execute.hpp"
+# endif
 class Server
 {
 private:
@@ -17,7 +21,7 @@ public:
 
 	void				setServerFD(uint32_t);
 	void				setUserList(std::vector<User>);
-	void				addUser(std::string name, int userFd, std::string, std::string);
+	void				addUser(std::string name, int userFd);
 	void				writeUserList();
 	void				createChannel(std::string channelName, int userFd, std::string password, std::string topic); // Mode Eklenicek
 	void				joinChannel(std::string channelName, int userFd, std::string password);
@@ -26,3 +30,4 @@ public:
 	Server(/* args */);
 	~Server();
 };
+#endif
