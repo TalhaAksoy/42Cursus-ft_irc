@@ -12,7 +12,7 @@ typedef enum
 	KICK
 } commandSwitch;
 
-typedef enum 
+typedef enum
 {
 	CAP,
 	REQ,
@@ -34,6 +34,6 @@ public:
 	void		setLuckyNumber();
 	void		cap(User&, int);
 	void		findCommad();
-	User		addUser(std::string name, int userFd);
+	User		addUser(std::string name, int userFd, std::string, std::string);
 	Channel		createChannel(std::string channelName, int userFd, std::string password, std::string topic);
 };

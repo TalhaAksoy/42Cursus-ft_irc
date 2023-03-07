@@ -65,9 +65,16 @@ void		Execute::findCommad()
 
 }
 
-User Execute::addUser(std::string name, int userFd)
+User Execute::addUser(std::string name, int userFd, std::string passInput, std::string password)
 {
 	User user;
+	if (user.getPassRequire())
+	{
+		if (passInput == password)
+			user.setPassRequire(false);
+		else
+		return user;
+	}
 	user.setName(name);
 	user.setFd(userFd);
 	return (user);
@@ -79,6 +86,7 @@ Channel Execute::createChannel(std::string channelName, int userFd, std::string 
 	channel.setName(channelName);
 	channel.setPassword(password);
 	channel.addUser(userFd);
+	std::cout << "kod burada" << std::endl;
 	channel.setTopic(topic);
 	return (channel);
 }

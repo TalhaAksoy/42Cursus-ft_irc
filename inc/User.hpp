@@ -11,7 +11,8 @@ private:
 	std::string	iw;
 	std::string	fullName;
 	std::string	nick;
-	int32_t	fd;
+	int32_t		fd;
+	bool		passRequire;
 	bool		getCap;
 public:
 	User();
@@ -26,5 +27,7 @@ public:
 	bool getGetCap();
 	void setGetCap(bool);
 	void setFd(int32_t);
+	bool getPassRequire();
+	void setPassRequire(bool);
 	int32_t getFd();
 };

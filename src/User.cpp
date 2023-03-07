@@ -2,6 +2,7 @@
 
 User::User()
 {
+	passRequire = true;
 	this->name = "Default";
 	this->fullName = "Default2";
 	this->getCap = false;
@@ -60,4 +61,14 @@ void User::setFd(int32_t fd)
 int32_t User::getFd()
 {
 	return(this->fd);
+}
+
+bool User::getPassRequire()
+{
+	return (this->passRequire);
+}
+
+void User::setPassRequire(bool status)
+{
+	this->passRequire = status;
 }

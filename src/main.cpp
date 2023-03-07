@@ -16,7 +16,7 @@ int main(int ac, char *av[]) {
 
 	Server server;
 	User defaultUser;
-	
+
 	int port = std::atoi(av[1]);
 	const std::string password = av[2];
 
@@ -89,7 +89,7 @@ int main(int ac, char *av[]) {
 				// Read incoming data
 				ssize_t bytes_recived = recv(client_socket[i], buffer, sizeof(buffer), 0);
 				std::cout << "Client Number => " << client_socket[i] << std::endl;
-				// if (i == 1)	
+				// if (i == 1)
 				// {
 				// 	std::string asd;
 				// 	asd = "001 CheaterAK :Welcome to Internet Relay Chat \r\n";
@@ -110,14 +110,20 @@ int main(int ac, char *av[]) {
 					if (!str[j].compare(0,5,"NICK"))
 					{
 						std::cout << "NICK GELDI" << std::endl;
-						server.addUser(str[j + 1], client_socket[i]);
+						if (str.size() != 3)
+						{
+							std::string loginErrorMessage = "Error :Few or More Arguments Error\r\n";
+							send(client_socket[i], loginErrorMessage.c_str(), loginErrorMessage.size(), 0);
+							return (1);
+						}
+						server.addUser(str[j + 1], client_socket[i], str[j + 2], password);
 						server.writeUserList();
 					}
 					if (!str[j].compare(0, 5, "JOIN"))
 					{
 						std::cout << "JOIN GELDI" << std::endl;
-						server.createChannel(str[j + 1], client_socket[i],password, NULL);
-						
+						server.createChannel(str[j + 1], client_socket[i],password, "");
+
 					}
 				}
 			}

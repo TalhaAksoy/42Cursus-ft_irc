@@ -2,6 +2,7 @@
 
 Server::Server()
 {
+
 	std::cout << "Server Created" << std::endl;
 }
 
@@ -28,19 +29,26 @@ std::vector<User> Server::getUserList(){
 	return (this->userList);
 }
 
-void Server::addUser(std::string name, int userFd)
+void Server::addUser(std::string name, int userFd, std::string passInput, std::string password)
 {
+	User newUser;
 	for (int i = 0; i < this->userList.size(); i++)
 	{
 		if (this->userList[i].getFd() == userFd)
 		{
-			std::cout << "buradan bir kod geldi gecti i, userfd=" << i <<", "<< userFd << std::endl; 
 			std::string nickErrorMessage = "ERROR :This Ip address already registered this irc server\r\n";
 			send(userFd, nickErrorMessage.c_str(), nickErrorMessage.size(), 0);
 			return;
 		}
 	}
-	this->userList.push_back(this->serverExec.addUser(name, userFd));
+	newUser = this->serverExec.addUser(name, userFd, passInput, password);
+	if (newUser.getName() == "Default")
+	{
+		std::string errMessage= "Error : invalid password \r\n";
+		send(userFd, errMessage.c_str(), errMessage.size(), 0);
+		return;
+	}
+	this->userList.push_back(newUser);
 	std::string nickMessage = "001 " + name + " :Welcome to Internet Relay Chat \r\n";
 	send(userFd, nickMessage.c_str(), nickMessage.size(), 0);
 }
@@ -51,8 +59,9 @@ void Server::writeUserList()
 		std::cout << i << ".user Name => " << this->userList[i].getName() << " | fd => " << this->userList[i].getFd() << std::endl;
 		std::cout << "--------------------------" << std::endl;
 }
-void Server::createChannel(std::string channelName, int userFd, std::string password, std::string topic)
+void Server::createChannel(std::string channelName, int userFd, std::string password, std::string topic = "No topic")
 {
+		std::cout << channelName << std::endl << userFd << std::endl << password << std::endl << topic << std::endl;
 	Channel channel = this->serverExec.createChannel(channelName, userFd, password, topic);
 	this->channelList.push_back(channel);
 }
