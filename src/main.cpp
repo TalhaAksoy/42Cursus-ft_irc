@@ -102,16 +102,11 @@ int main(int ac, char *av[]) {
 					print_err("Connection Closed By Client");
 				buffer[bytes_recived] = '\0';
 
-				//std::cout << "[" << buffer << "]" << std::endl;
+				std::cout << "[" << buffer << "]" << std::endl;
 				std::vector<std::string> str = splitString(buffer, ' ');
 				executeCommand(str, password, client_socket[i], server);
 			}
 		}
-	}
-	close(server_socket);
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		close(client_socket[i]);
 	}
 	return 0;
 }

@@ -112,3 +112,16 @@ void Server::leaveChannel(std::string channelName, int userFd)
 	std::string leaveErrorMessage = "ERROR :Channel not found\r\n";
 	send(userFd, leaveErrorMessage.c_str(), leaveErrorMessage.size(), 0);
 }
+
+void Server::removeUser(int userFd)
+{
+	for (int i = 0; i < this->userList.size(); i++)
+	{
+		if (this->userList[i].getFd() == userFd)
+		{
+			close(userFd);
+			this->userList.erase(this->userList.begin() + i);
+			return;
+		}
+	}
+}

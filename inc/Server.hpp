@@ -1,12 +1,10 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# ifndef IRC_HPP
-#  include "irc.hpp"
-# endif
-# ifndef EXECUTE_HPP
-#  include "Execute.hpp"
-# endif
+#include "Execute.hpp"
+#include <unistd.h>
+#include <vector>
+#include <iostream>
 class Server
 {
 private:
@@ -27,6 +25,7 @@ public:
 	void				joinChannel(std::string channelName, int userFd, std::string password);
 	void				leaveChannel(std::string channelName, int userFd);
 	void				writeChannelList();
+	void 				removeUser(int userFd);
 	Server(/* args */);
 	~Server();
 };

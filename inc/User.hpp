@@ -1,11 +1,7 @@
 #ifndef USER_HPP
 # define USER_HPP
 
-# ifndef IRC_HPP
-#  include "irc.hpp"
-# endif
-//#include "Execute.hpp"
-//#include "Server.hpp"
+#include <iostream>
 
 class User
 {

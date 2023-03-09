@@ -1,8 +1,11 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
-# ifndef IRC_HPP
-#  include "irc.hpp"
-# endif
+
+#include <iostream>
+#include <vector>
+#include <sys/types.h>
+#include <sys/socket.h>
+
 class Channel
 {
 private:

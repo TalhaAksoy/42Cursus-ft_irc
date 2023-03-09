@@ -1,14 +1,11 @@
 #ifndef EXECUTE_HPP
 # define EXECUTE_HPP
-# ifndef IRC_HPP
-#  include "irc.hpp"
-# endif
-# ifndef USER_HPP
-#  include "User.hpp"
-# endif
-# ifndef CHANNEL_HPP
-#  include "Channel.hpp"
-# endif
+
+#include "User.hpp"
+#include "Channel.hpp"
+#include <vector>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 # define MAX_CLIENTS 10
 

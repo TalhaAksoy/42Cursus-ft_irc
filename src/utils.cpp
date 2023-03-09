@@ -24,15 +24,24 @@ std::vector<std::string> splitString(std::string str, char delimiter)
 	return substrings;
 }
 
-int executeCommand(std::vector<std::string> vector, std::string password, int userFd, Server server)
+int executeCommand(std::vector<std::string> vector, std::string password, int userFd, Server& server)
 {
 
-	int passFlag = 0;
+	static int passFlag[MAX_CLIENTS];
 	std::string errorMessage;
+	for (int i = 0; i < vector.size(); i++)
+	{
+		std::cout << "{" << vector[i] << "}" << std::endl;
+	}
 	if (!vector[0].compare(0, 4, "PASS") && vector.size() == 2)
 	{
-		if (vector[1] == password)
-			passFlag = 1;
+		std::cout << "My Password > " << vector[1] << "Server Password " << password << std::endl;
+		if (!vector[1].compare(0, vector[1].length() - 2, password.c_str()))
+		{
+			passFlag[userFd - 4] = 1;
+			errorMessage = "Server: Login Successfull\r\n";
+			send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
+		}
 		else
 		{
 			errorMessage = "Error :Password Incorrect\r\n";
@@ -40,12 +49,17 @@ int executeCommand(std::vector<std::string> vector, std::string password, int us
 			return (1);
 		}
 	}
-	if (passFlag != 1)
+	if (passFlag[userFd - 4] != 1)
+	{
+		errorMessage = "Error :Please Login First\r\n";
+		send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
 		return (1);
-	if (!vector[0].compare(0, 5, "NICK"))
+	}
+	std::cout << vector[0] << " < vector[0]" << std::endl << vector[0].length() << " len[0]" << std::endl; 
+	if (!vector[0].compare(0, 4, "NICK"))
 	{
 		std::cout << "NICK GELDI" << std::endl;
-		if (vector.size() != 3)
+		if (vector.size() != 2)
 		{
 			errorMessage = "Error :Few or More Arguments Error\r\n";
 			send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
@@ -58,6 +72,12 @@ int executeCommand(std::vector<std::string> vector, std::string password, int us
 	{
 		std::cout << "JOIN GELDI" << std::endl;
 		server.createChannel(vector[1], userFd, password, "");
+	}
+	if (!vector[0].compare(0,4, "QUIT"))
+	{
+		std::cout << "QUIT GELDI" << std::endl;
+		server.removeUser(userFd);
+		passFlag[userFd - 4] = 0;	
 	}
 	return (0);
 }
