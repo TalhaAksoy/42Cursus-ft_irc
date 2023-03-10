@@ -28,6 +28,7 @@ int executeCommand(std::vector<std::string> vector, std::string password, int us
 {
 
 	static int passFlag[MAX_CLIENTS];
+	static int userFlag[MAX_CLIENTS];
 	std::string errorMessage;
 	for (int i = 0; i < vector.size(); i++)
 	{
@@ -49,12 +50,6 @@ int executeCommand(std::vector<std::string> vector, std::string password, int us
 			return (1);
 		}
 	}
-	if (passFlag[userFd - 4] != 1)
-	{
-		errorMessage = "Error :Please Login First\r\n";
-		send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
-		return (1);
-	}
 	std::cout << vector[0] << " < vector[0]" << std::endl << vector[0].length() << " len[0]" << std::endl; 
 	if (!vector[0].compare(0, 4, "NICK"))
 	{
@@ -66,18 +61,35 @@ int executeCommand(std::vector<std::string> vector, std::string password, int us
 			return (1);
 		}
 		server.addUser(vector[1], userFd); //password muhabbetleri kalkicak
+		userFlag[userFd - 4] = 1;
 		server.writeUserList();
 	}
-	if (!vector[0].compare(0, 5, "JOIN"))
+	if (passFlag[userFd - 4] != 1)
+	{
+		errorMessage = "Error :Please Login Password\r\n";
+		send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
+		return (1);
+	}
+	if (userFlag[userFd - 4] != 1)
+	{
+		errorMessage = "Error :Please Set a Name\r\n";
+		send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
+		return (1);
+	}
+	if (!vector[0].compare(0, 5, "JOIN") && vector.size() == 2)
 	{
 		std::cout << "JOIN GELDI" << std::endl;
-		server.createChannel(vector[1], userFd, password, "");
+		if (server.isExistChannel(vector[1]) == 1)
+			std::cout << "asd" << std::endl;
+		else
+			server.createChannel(vector[1], userFd, password, "");
 	}
 	if (!vector[0].compare(0,4, "QUIT"))
 	{
 		std::cout << "QUIT GELDI" << std::endl;
 		server.removeUser(userFd);
 		passFlag[userFd - 4] = 0;	
+		userFlag[userFd - 4] = 0;	
 	}
 	return (0);
 }

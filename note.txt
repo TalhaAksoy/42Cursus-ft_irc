@@ -22,3 +22,6 @@ class duzenlemeleri yapildi
 !!!! Kanallari Nasi Tutucaz Melihe Sor !!!! X
 
 hata mesajlarini fonksiyona cevir
+
+
+kanallar kaldi ve onlara ozel komutlar X

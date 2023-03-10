@@ -45,6 +45,6 @@ void Channel::removeUser(int userFd)
 			return;
 		}
 	}
-	std::string errorMessage = "ERROR :This Ip address already registered this irc server\r\n";
+	std::string errorMessage = "ERROR :User Not Join This Channel\r\n";
 	send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
 }

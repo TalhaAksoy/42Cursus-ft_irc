@@ -26,6 +26,7 @@ public:
 	void				leaveChannel(std::string channelName, int userFd);
 	void				writeChannelList();
 	void 				removeUser(int userFd);
+	int					isExistChannel(std::string channelName);
 	Server(/* args */);
 	~Server();
 };

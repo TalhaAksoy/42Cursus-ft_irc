@@ -61,7 +61,7 @@ void Server::writeUserList()
 }
 void Server::createChannel(std::string channelName, int userFd, std::string password, std::string topic = "No topic")
 {
-		std::cout << channelName << std::endl << userFd << std::endl << password << std::endl << topic << std::endl;
+	std::cout << channelName << std::endl << userFd << std::endl << password << std::endl << topic << std::endl;
 	Channel channel = this->serverExec.createChannel(channelName, userFd, password, topic);
 	this->channelList.push_back(channel);
 }
@@ -124,4 +124,14 @@ void Server::removeUser(int userFd)
 			return;
 		}
 	}
+}
+
+int Server::isExistChannel(std::string channelName)
+{
+	for (int i = 0; i < this->channelList.size(); i++)
+	{
+		if (this->channelList[i].getName() == channelName)
+			return 1;
+	}
+	return 0;
 }
