@@ -25,3 +25,5 @@ hata mesajlarini fonksiyona cevir
 
 
 kanallar kaldi ve onlara ozel komutlar X
+
+ac
