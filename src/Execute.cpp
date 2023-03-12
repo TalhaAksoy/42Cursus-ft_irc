@@ -79,7 +79,7 @@ Channel Execute::createChannel(std::string channelName, int userFd, std::string 
 	Channel channel;
 	channel.setName(channelName);
 	channel.setPassword(password);
-	channel.addUser(userFd);
+	channel.addUserToChannel(userFd);
 	std::cout << "kod burada" << std::endl;
 	channel.setTopic(topic);
 	return (channel);

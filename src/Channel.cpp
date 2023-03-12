@@ -1,6 +1,7 @@
-#include "Channel.hpp"
+#include "irc.hpp"
+class Server;
 
-void Channel::addUser(int userFd)
+void Channel::addUserToChannel(int userFd)
 {
 	this->userFdNumber.push_back(userFd);
 }
@@ -47,4 +48,12 @@ void Channel::removeUser(int userFd)
 	}
 	std::string errorMessage = "ERROR :User Not Join This Channel\r\n";
 	send(userFd, errorMessage.c_str(), errorMessage.size(), 0);
+}
+
+void Channel::showUser(Server &server)
+{
+	for (int i = 0; i < this->userFdNumber.size(); i++)
+	{
+		server.findUser(this->userFdNumber[i]);
+	}
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "Server.hpp"
 
 class Channel
 {
@@ -20,7 +21,8 @@ public:
 	std::string			getPassword();	
 	std::string			getName();	
 	std::string			getTopic();	
-	void				addUser(int);
+	void				addUserToChannel(int);
 	void				removeUser(int);
+	void				showUser(Server &server);
 };
 #endif

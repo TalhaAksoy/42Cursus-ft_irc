@@ -10,12 +10,12 @@ class Server
 private:
 	uint32_t				serverFD;
 	std::vector<User>		userList;
-	std::vector<Channel>	channelList;
 
 public:
-	uint32_t			getServerFD();
-	std::vector<User>	getUserList();
-	Execute				serverExec;
+	uint32_t				getServerFD();
+	std::vector<User>		getUserList();
+	Execute					serverExec;
+	std::vector<Channel>	channelList;
 
 	void				setServerFD(uint32_t);
 	void				setUserList(std::vector<User>);
@@ -27,6 +27,7 @@ public:
 	void				writeChannelList();
 	void 				removeUser(int userFd);
 	int					isExistChannel(std::string channelName);
+	void				findUser(int userFd);
 	Server(/* args */);
 	~Server();
 };

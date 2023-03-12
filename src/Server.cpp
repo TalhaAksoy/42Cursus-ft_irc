@@ -74,7 +74,7 @@ void Server::joinChannel(std::string channelName, int userFd, std::string passwo
 		{
 			if (this->channelList[i].getPassword() == password)
 			{
-				this->channelList[i].addUser(userFd);
+				this->channelList[i].addUserToChannel(userFd);
 				std::string joinMessage = "JOIN " + channelName + "\r\n";
 				send(userFd, joinMessage.c_str(), joinMessage.size(), 0);
 				return;
@@ -131,7 +131,20 @@ int Server::isExistChannel(std::string channelName)
 	for (int i = 0; i < this->channelList.size(); i++)
 	{
 		if (this->channelList[i].getName() == channelName)
-			return 1;
+			return i;
 	}
-	return 0;
+	return -1;
+}
+
+void Server::findUser(int userFd)
+{
+	for(int i = 0; i < this->userList.size(); i++)
+	{
+		if (this->userList[i].getFd() == userFd)
+		{
+			std::cout << "User Name : " << this->userList[i].getName() << "| User FD : " << this->userList[i].getFd() << std::endl;
+			return;
+		}
+	}
+	std::cout << "UserNotFound" << std::endl;
 }
