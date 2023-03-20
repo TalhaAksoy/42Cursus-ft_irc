@@ -1,11 +1,10 @@
-#ifndef EXECUTE_HPP
-# define EXECUTE_HPP
+#pragma once
 
-#include "User.hpp"
-#include "Channel.hpp"
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <iostream>
+#include <string>
 
 # define MAX_CLIENTS 10
 
@@ -24,12 +23,15 @@ typedef enum
 	DONE
 }	statement;
 
+class User;
+class Channel;
+
 class Execute
 {
 private:
 	std::string					command;
 	std::vector<std::string>	argv;
-	int							luckyNumber = 31;
+	int							luckyNumber;
 	u_int32_t					commandType;
 	int							fd_array[MAX_CLIENTS][2];
 public:
@@ -43,4 +45,5 @@ public:
 	Channel		createChannel(std::string channelName, int userFd, std::string password, std::string topic);
 };
 
-#endif
+#include "User.hpp"
+#include "Channel.hpp"

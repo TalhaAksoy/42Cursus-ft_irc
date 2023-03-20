@@ -5,10 +5,15 @@
 #include <unistd.h>
 #include <vector>
 #include <iostream>
+
+class Channel;
+class Execute;
+
 class Server
 {
 private:
-	uint32_t				serverFD;
+	uint32_t				sockFd;
+	uint32_t				port;
 	std::vector<User>		userList;
 
 public:
@@ -29,6 +34,7 @@ public:
 	int					isExistChannel(std::string channelName);
 	void				findUser(int userFd);
 	Server(/* args */);
+	Server(int sockFd, const int port, const std::string password);
 	~Server();
 };
 #endif

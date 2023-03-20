@@ -58,7 +58,11 @@ void		Execute::findCommad()
 {
 	std::vector<std::string> commands;
 
-	commands = {"NICK", "JOIN", "PRIVMSG", "KICK"};
+	// commands = {"NICK", "JOIN", "PRIVMSG", "KICK"};
+	commands.push_back("NICK");
+	commands.push_back("JOIN");
+	commands.push_back("PRIVMSG");
+	commands.push_back("KICK");
 	for	(int j = 0; j < commands.size(); j++)
 		if (command.compare(commands[j]))
 			commandType = j;

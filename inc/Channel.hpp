@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include "Server.hpp"
 
+class Server;
+
 class Channel
 {
 private:

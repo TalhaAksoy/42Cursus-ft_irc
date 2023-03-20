@@ -2,8 +2,13 @@
 
 Server::Server()
 {
+	std::cout << "Const Called" << std::endl;
+}
 
-	std::cout << "Server Created" << std::endl;
+Server::Server(int sockFd, const int port, const std::string password)
+{
+	this->sockFd = sockFd;
+	this->port = port;
 }
 
 Server::~Server()
@@ -12,7 +17,7 @@ Server::~Server()
 }
 void	Server::setServerFD(uint32_t fd)
 {
-	this->serverFD = fd;
+	this->sockFd = fd;
 }
 
 void	Server::setUserList(std::vector<User> userList)
@@ -22,7 +27,7 @@ void	Server::setUserList(std::vector<User> userList)
 
 uint32_t Server::getServerFD()
 {
-	return (this->serverFD);
+	return (this->sockFd);
 }
 
 std::vector<User> Server::getUserList(){
