@@ -11,6 +11,8 @@
 #include <vector>
 # include "Server.hpp"
 
+class Server;
+
 #define MAX_CLIENTS 10
 #define BUFFER_SIZE 1024
 

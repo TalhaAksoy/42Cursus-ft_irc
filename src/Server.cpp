@@ -5,10 +5,30 @@ Server::Server()
 	std::cout << "Const Called" << std::endl;
 }
 
-Server::Server(int sockFd, const int port, const std::string password)
+Server::Server(int sockFd, int port, const std::string password)
 {
 	this->sockFd = sockFd;
 	this->port = port;
+	this->password = password;
+
+
+	std::cout << "comstrucrure Listenin Port on [" << this->port << "]" << std::endl;
+	std::cout << "comstrucrure Server Password Is [" << this->password << "]" << std::endl;
+
+
+	if (bind(this->sockFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0) {
+		perror("Bind failed");
+		exit(EXIT_FAILURE);
+	}
+
+	this->server_address.sin_family = AF_INET;
+	this->server_address.sin_addr.s_addr = INADDR_ANY;
+	this->server_address.sin_port = htons(port);
+
+	if (listen(this->sockFd, MAX_CLIENTS) < 0) {
+		perror("Listen failed");
+		exit(EXIT_FAILURE);
+	}
 }
 
 Server::~Server()

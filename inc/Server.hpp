@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <vector>
 #include <iostream>
+#include "irc.hpp"
 
 class Channel;
 class Execute;
@@ -14,6 +15,8 @@ class Server
 private:
 	uint32_t				sockFd;
 	uint32_t				port;
+	std::string				password;
+	struct sockaddr_in		server_address;
 	std::vector<User>		userList;
 
 public:
@@ -34,7 +37,8 @@ public:
 	int					isExistChannel(std::string channelName);
 	void				findUser(int userFd);
 	Server(/* args */);
-	Server(int sockFd, const int port, const std::string password);
+	Server(int sockFd, int port, const std::string password);
 	~Server();
 };
+
 #endif
